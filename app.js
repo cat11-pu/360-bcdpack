@@ -1,5 +1,4 @@
-// app.js：渲染结果
-import { pairOf, leftOf } from "./bcd.js";
+// app.js：渲染结果（十八个键，bytes、buffer、joined 打头，full_diff 收尾）
 import { step, close } from "./bcdrun.js";
 
 export function render(spec) {
@@ -31,7 +30,7 @@ export function render(spec) {
            mid_differs: fingerprint(r2.state) !== fingerprint(first.state),
            closed_equal: fingerprint(closedTwo.state) === fingerprint(closed.state),
            replay_new: replay.served, judged: first.judged, judged_bound: first.judged_bound,
-           full_diff: fingerprint(closed.state) === fingerprint(fullClosed.state) ? 0 : 1,
            count_events: events.length,
-           tail: pairOf("12").length + leftOf("123").length };
+           full_diff: fingerprint(closed.state) === fingerprint(fullClosed.state) ? 0 : 1
+  };
 }
