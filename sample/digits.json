@@ -1,0 +1,13 @@
+{
+  "budget": 2,
+  "bad_digit_code": "E_BAD_DIGIT",
+  "short_code": "E_SHORT",
+  "event_error_code": "E_BAD_EVENT",
+  "state": { "bytes": [], "buffer": "", "ledger": [], "applied": [] },
+  "events": [
+    { "id": 1, "kind": "feed", "text": "12345" },
+    { "id": 2, "kind": "pack" },
+    { "id": 3, "kind": "pack" },
+    { "id": 4, "kind": "feed", "text": "67" }
+  ]
+}
