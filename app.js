@@ -1,19 +1,19 @@
-// app.js：渲染结果
-import { pairOf, leftOf } from "./bcd.js";
+// app.js：渲染结果（十八个键，bytes/buffer/joined 打头，full_diff 收尾）
 import { step, close } from "./bcdrun.js";
 
 export function render(spec) {
-  const events = spec.events || [];
+  const input = spec || {};
+  const events = input.events || [];
   const half = Math.ceil(events.length / 2);
-  const first = step(spec);
-  const closed = close(Object.assign({}, spec, { state: first.state }));
-  const r1 = step(Object.assign({}, spec, { events: events.slice(0, half) }));
-  const r2 = step(Object.assign({}, spec, { state: r1.state, events: events.slice(half) }));
-  const closedTwo = close(Object.assign({}, spec, { state: r2.state }));
-  const replay = step(Object.assign({}, spec, { state: closed.state }));
-  const wide = step(Object.assign({}, spec, { budget: spec.budget + 2 }));
-  const full = step(Object.assign({}, spec, { events: events, budget: events.length + 2 }));
-  const fullClosed = close(Object.assign({}, spec, { state: full.state }));
+  const first = step(input);
+  const closed = close(Object.assign({}, input, { state: first.state }));
+  const r1 = step(Object.assign({}, input, { events: events.slice(0, half) }));
+  const r2 = step(Object.assign({}, input, { state: r1.state, events: events.slice(half) }));
+  const closedTwo = close(Object.assign({}, input, { state: r2.state }));
+  const replay = step(Object.assign({}, input, { state: closed.state }));
+  const wide = step(Object.assign({}, input, { budget: input.budget + 2 }));
+  const full = step(Object.assign({}, input, { events: events, budget: events.length + 2 }));
+  const fullClosed = close(Object.assign({}, input, { state: full.state }));
   const fingerprint = function (state) {
     return JSON.stringify({
       bytes: state.bytes, buffer: state.buffer,
@@ -31,7 +31,6 @@ export function render(spec) {
            mid_differs: fingerprint(r2.state) !== fingerprint(first.state),
            closed_equal: fingerprint(closedTwo.state) === fingerprint(closed.state),
            replay_new: replay.served, judged: first.judged, judged_bound: first.judged_bound,
-           full_diff: fingerprint(closed.state) === fingerprint(fullClosed.state) ? 0 : 1,
            count_events: events.length,
-           tail: pairOf("12").length + leftOf("123").length };
+           full_diff: fingerprint(closed.state) === fingerprint(fullClosed.state) ? 0 : 1 };
 }
